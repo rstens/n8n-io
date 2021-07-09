@@ -1,61 +1,30 @@
 FROM registry.redhat.io/rhel7
 
-# PostgreSQL image for OpenShift with PostGIS extension.
-# Volumes:
-#  * /var/lib/psql/data   - Database cluster for PostgreSQL
-# Environment:
-#  * $POSTGRESQL_USER     - Database user name
-#  * $POSTGRESQL_PASSWORD - User's password
-#  * $POSTGRESQL_DATABASE - Name of the database to create
-#  * $POSTGRESQL_ADMIN_PASSWORD (Optional) - Password for the 'postgres'
-#                           PostgreSQL administrative account
+ARG N8N_VERSION
 
-ENV POSTGIS_EXTENSION=N \
-    PGCRYPTO_EXTENSION=N \
-    POSTGRESQL_VERSION=12 \
-    POSTGRESQL_PREV_VERSION=10 \
-    HOME=/var/lib/pgsql \
-    PGUSER=postgres \
-    LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
-    APP_DATA=/opt/app-root
-
-ENV POSTGISV 3
 ENV TZ America/Vancouver
-ENV PORT 5432
-
-ENV SUMMARY="PostgreSQL is an advanced Object-Relational database management system" \
-    DESCRIPTION="PostgreSQL is an advanced Object-Relational database management system (DBMS). \
-The image contains the client and server programs that you'll need to \
-create, run, maintain and access a PostgreSQL DBMS server."
+ENV SUMMARY="n8n-io" \
+    DESCRIPTION="n8n-io"
 
 LABEL summary=$SUMMARY \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
-      io.k8s.display-name="PostgreSQL $POSTGRESQL_VERSION" \
-      io.openshift.expose-services="5432:postgresql" \
-      io.openshift.tags="database,postgresql,postgresql$POSTGRESQL_VERSION,rh-postgresql$POSTGRESQL_VERSION,postgis,postgis$POSTGISV" \
-      name="rhscl/postgresql-$POSTGRESQL_VERSION-rhel7" \
-      com.redhat.component="rh-postgresql$POSTGRESQL_VERSION-container" \
-      version="1" \
-      release="1" \
-      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#rhel" \
-      usage="podman run -d --name postgresql_database -e POSTGRESQL_USER=user -e POSTGRESQL_PASSWORD=pass -e POSTGRESQL_DATABASE=db -p 5432:5432 rhscl/postgresql-$POSTGRESQL_VERSION-rhel7" \
-      maintainer="SoftwareCollections.org <sclorg@redhat.com>"
-
-COPY root/usr/libexec/fix-permissions /usr/libexec/fix-permissions
+      io.k8s.display-name="" \
+      io.openshift.expose-services="" \
+      io.openshift.tags="" \
+      name="rhel7" \
+      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#rhel" 
 
 # Copy entitlements and subscription manager configurations
 # https://github.com/BCDevOps/OpenShift4-Migration/issues/15
-COPY ./etc-pki-entitlement /etc/pki/entitlement
-COPY ./rhsm-conf /etc/rhsm
-COPY ./rhsm-ca /etc/rhsm/ca
-
-# This image must forever use UID 26 for postgres user so our volumes are
-# safe in the future. This should *never* change, the last test is there
-# to make sure of that.
-# rhel-7-server-ose-3.2-rpms is enabled for nss_wrapper until this pkg is
-# in base RHEL
+# COPY ./etc-pki-entitlement /etc/pki/entitlement
+# COPY ./rhsm-conf /etc/rhsm
+# COPY ./rhsm-ca /etc/rhsm/ca
 #
+
+RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
+RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+
 # We need to call 2 (!) yum commands before being able to enable repositories properly
 # This is a workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1479388
 # Initialize /etc/yum.repos.d/redhat.repo
@@ -67,38 +36,23 @@ RUN rm /etc/rhsm-host && \
     yum-config-manager --enable rhel-server-rhscl-7-rpms && \
     yum-config-manager --enable rhel-7-server-rpms && \
     yum-config-manager --enable rhel-7-server-optional-rpms && \
-    INSTALL_PKGS="rsync tar gettext bind-utils nss_wrapper nodejs " && \
+    INSTALL_PKGS="gcc-c++ make rsync tar gettext bind-utils nss_wrapper nodejs" && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*' && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
-# Get prefix path and path to scripts rather than hard-code them in scripts
-ENV CONTAINER_SCRIPTS_PATH=/usr/share/container-scripts/postgresql \
-    ENABLED_COLLECTIONS=rh-postgresql12
-
-# When bash is started non-interactively, to run a shell script, for example it
-# looks for this variable and source the content of this file. This will enable
-# the SCL for all scripts without need to do 'scl enable'.
-ENV BASH_ENV=${CONTAINER_SCRIPTS_PATH}/scl_enable \
-    ENV=${CONTAINER_SCRIPTS_PATH}/scl_enable \
-    PROMPT_COMMAND=". ${CONTAINER_SCRIPTS_PATH}/scl_enable"
-
-VOLUME ["/var/lib/pgsql/data", "/var/run/postgresql"]
-
-COPY root /
-ENV PATH
+VOLUME ["/data"]
 
 # Remove entitlements and Subscription Manager configs
-RUN rm -rf /etc/pki/entitlement && \
-    rm -rf /etc/rhsm
+#RUN rm -rf /etc/pki/entitlement && \
+#    rm -rf /etc/rhsm
 
-RUN bash /usr/libexec/fix-permissions /var/lib/pgsql
+USER 1001
 
-USER 26
+RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
-EXPOSE ${PORT}
+WORKDIR /data
 
-ENTRYPOINT ["/usr/bin/container-entrypoint"]
-CMD ["/usr/bin/run-postgresql"]
+CMD "n8n"
