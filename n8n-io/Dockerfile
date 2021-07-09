@@ -29,15 +29,11 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
 # This is a workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1479388
 # Initialize /etc/yum.repos.d/redhat.repo
 # See https://access.redhat.com/solutions/1443553
-RUN rm /etc/rhsm-host && \
-    yum repolist > /dev/null && \
+RUN yum repolist > /dev/null && \
     yum install -y yum-utils gettext && \
-    yum-config-manager --disable \* &> /dev/null && \
-    yum-config-manager --enable rhel-server-rhscl-7-rpms && \
-    yum-config-manager --enable rhel-7-server-rpms && \
-    yum-config-manager --enable rhel-7-server-optional-rpms
+    yum-config-manager --disable \* &> /dev/null
     
-RUN INSTALL_PKGS="gcc-c++ make rsync tar gettext bind-utils nss_wrapper nodejs" && \
+RUN INSTALL_PKGS="gcc-c++ make nodejs" && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS
     
