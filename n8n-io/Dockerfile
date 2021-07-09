@@ -17,9 +17,9 @@ LABEL summary=$SUMMARY \
 
 # Copy entitlements and subscription manager configurations
 # https://github.com/BCDevOps/OpenShift4-Migration/issues/15
-COPY ./etc-pki-entitlement /etc/pki/entitlement
-COPY ./rhsm-conf /etc/rhsm
-COPY ./rhsm-ca /etc/rhsm/ca
+#COPY ./etc-pki-entitlement /etc/pki/entitlement
+#COPY ./rhsm-conf /etc/rhsm
+#COPY ./rhsm-ca /etc/rhsm/ca
 #
 
 RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
@@ -46,8 +46,8 @@ RUN rm /etc/rhsm-host && \
 VOLUME ["/data"]
 
 # Remove entitlements and Subscription Manager configs
-RUN rm -rf /etc/pki/entitlement && \
-    rm -rf /etc/rhsm
+#RUN rm -rf /etc/pki/entitlement && \
+#    rm -rf /etc/rhsm
 
 USER 1001
 
