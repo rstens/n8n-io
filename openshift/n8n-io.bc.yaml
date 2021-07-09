@@ -90,7 +90,7 @@ parameters:
     displayName: Git Repo URL
     description: The URL to your GIT repo.
     required: true
-    value: https://github.com/bcgov/biohubbc.git
+    value: https://github.com/rstens/n8n-io.git
   - name: GIT_REF
     displayName: Git Reference
     description: The git reference or branch.
@@ -100,7 +100,7 @@ parameters:
     displayName: Source Context Directory
     description: The source context directory.
     required: false
-    value: containers/n8n-io
+    value: n8n-io
   - name: OUTPUT_IMAGE_TAG
     displayName: Output Image Tag
     description: The tag given to the built image.
@@ -124,7 +124,7 @@ parameters:
       The name of the source image.  If specified, this overrides the 'FROM'
       spec in the Docker file.
     required: false
-    value: registry.redhat.io/rhscl/rhel7
+    value: registry.redhat.io/rhel7
   - name: SOURCE_IMAGE_TAG
     displayName: Source Image Tag
     description:
