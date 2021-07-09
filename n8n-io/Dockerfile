@@ -35,11 +35,13 @@ RUN rm /etc/rhsm-host && \
     yum-config-manager --disable \* &> /dev/null && \
     yum-config-manager --enable rhel-server-rhscl-7-rpms && \
     yum-config-manager --enable rhel-7-server-rpms && \
-    yum-config-manager --enable rhel-7-server-optional-rpms && \
-    INSTALL_PKGS="gcc-c++ make rsync tar gettext bind-utils nss_wrapper nodejs" && \
+    yum-config-manager --enable rhel-7-server-optional-rpms
+    
+RUN INSTALL_PKGS="gcc-c++ make rsync tar gettext bind-utils nss_wrapper nodejs" && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum -y clean all --enablerepo='*' && \
+    rpm -V $INSTALL_PKGS
+    
+RUN yum -y clean all --enablerepo='*' && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
