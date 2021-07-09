@@ -1,6 +1,6 @@
 FROM registry.redhat.io/rhel7
 
-ARG N8N_VERSION
+ARG N8N_VERSION=0.36.1
 
 ENV TZ America/Vancouver
 ENV SUMMARY="n8n-io" \
