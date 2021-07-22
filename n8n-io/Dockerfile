@@ -47,9 +47,11 @@ VOLUME ["/data"]
 #RUN rm -rf /etc/pki/entitlement && \
 #    rm -rf /etc/rhsm
 
+RUN chown -R 1001:0 /data
+
 USER 1001
 
-RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
+RUN npm_config_user=1001 npm install -g n8n@${N8N_VERSION}
 
 WORKDIR /data
 
