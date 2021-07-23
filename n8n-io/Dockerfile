@@ -59,4 +59,4 @@ USER 1001
 
 EXPOSE 5678/tcp
 
-CMD "n8n"
+# CMD "n8n"
