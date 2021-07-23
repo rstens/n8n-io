@@ -52,7 +52,6 @@ RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
 RUN chown -R 1001:0 /data
 RUN chown -R 1001:0 /.npm
-RUN chown -R 1001:0 /.n8n
 RUN chown -R 1001:0 /usr/lib/node_modules
 RUN chown -R 1001:0 /usr/bin/n8n
 
