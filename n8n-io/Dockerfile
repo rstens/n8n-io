@@ -17,9 +17,9 @@ LABEL summary=$SUMMARY \
 
 # Copy entitlements and subscription manager configurations
 # https://github.com/BCDevOps/OpenShift4-Migration/issues/15
-#COPY ./etc-pki-entitlement /etc/pki/entitlement
-#COPY ./rhsm-conf /etc/rhsm
-#COPY ./rhsm-ca /etc/rhsm/ca
+COPY ./platform-services-controlled-etc-pki-entitlement /etc/pki/entitlement
+COPY ./platform-services-controlled-rhsm-conf /etc/rhsm
+COPY ./platform-services-controlled-rhsm-ca /etc/rhsm/ca
 #
 
 RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
@@ -42,18 +42,17 @@ RUN yum -y clean all --enablerepo='*' && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
 VOLUME ["/data"]
+WORKDIR /data
 
 # Remove entitlements and Subscription Manager configs
-#RUN rm -rf /etc/pki/entitlement && \
-#    rm -rf /etc/rhsm
+RUN rm -rf /etc/pki/entitlement && \
+    rm -rf /etc/rhsm
 
 RUN chown -R 1001:0 /data
 
 USER 1001
 
 RUN npm_config_user=1001 npm install -g n8n@${N8N_VERSION}
-
-WORKDIR /data
 
 EXPOSE 5678/tcp
 
