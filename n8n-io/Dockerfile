@@ -28,7 +28,7 @@ COPY ./rhsm-ca /etc/rhsm/ca
 RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
 
-RUN INSTALL_PKGS="gcc-c++ make nodejs" && \
+RUN INSTALL_PKGS="gettext gcc-c++ make nodejs" && \
     rm /etc/rhsm-host && \
     yum repolist --disablerepo=* && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
