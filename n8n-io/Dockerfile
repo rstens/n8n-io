@@ -47,9 +47,12 @@ RUN rm -rf /etc/pki/entitlement && \
 
 RUN mkdir -p /.npm
 RUN mkdir -p /usr/lib/node_modules
+RUN mkdir -p /usr/bin/n8n
+
 RUN chown -R 1001:0 /data
 RUN chown -R 1001:0 /.npm
 RUN chown -R 1001:0 /usr/lib/node_modules
+RUN chown -R 1001:0 /usr/bin/n8n
 
 USER 1001
 
