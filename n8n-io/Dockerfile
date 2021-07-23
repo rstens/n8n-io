@@ -45,14 +45,11 @@ WORKDIR /data
 RUN rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
-RUN mkdir -p /.npm
-RUN mkdir -p /usr/lib/node_modules
+RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
 RUN chown -R 1001:0 /data
 RUN chown -R 1001:0 /.npm
 RUN chown -R 1001:0 /usr/lib/node_modules
-
-RUN npm_config_user=1001 npm install -g n8n@${N8N_VERSION}
 RUN chown -R 1001:0 /usr/bin/n8n
 
 USER 1001
