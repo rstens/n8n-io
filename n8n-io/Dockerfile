@@ -1,4 +1,4 @@
-FROM  af2668-tools/rhel7
+FROM  registry.access.redhat.com/rhel7:latest
 
 ARG N8N_VERSION=0.36.1
 
