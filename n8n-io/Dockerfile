@@ -48,8 +48,7 @@ RUN rm -rf /etc/pki/entitlement && \
 RUN mkdir -p /.npm
 
 RUN npm_config_user=root npm install request -g
-RUN npm_config_user=root npm install n8n -g
-#RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
+RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
 RUN chown -R 1001:0 /data
 RUN chown -R 1001:0 /.npm
