@@ -1,4 +1,4 @@
-FROM  redhat-docker-remote.artifacts.developer.gov.bc.ca/rhel7/latest
+FROM  rhel7:latest
 
 ARG N8N_VERSION=0.36.1
 
