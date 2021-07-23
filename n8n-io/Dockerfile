@@ -1,4 +1,4 @@
-FROM  rhel7:latest
+FROM  registry.access.redhat.com/rhel7/rhel
 
 ARG N8N_VERSION=0.36.1
 
