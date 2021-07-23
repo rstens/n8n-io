@@ -1,4 +1,4 @@
-FROM  registry.access.redhat.com/rhel7/rhel
+FROM  image-registry.openshift-image-registry.svc:5000/af2668-tools/rhel7
 
 ARG N8N_VERSION=0.36.1
 
@@ -17,23 +17,20 @@ LABEL summary=$SUMMARY \
 
 # Copy entitlements and subscription manager configurations
 # https://github.com/BCDevOps/OpenShift4-Migration/issues/15
+
 COPY ./etc-pki-entitlement /etc/pki/entitlement
+
+# Copy subscription manager configurations
 COPY ./rhsm-conf /etc/rhsm
 COPY ./rhsm-ca /etc/rhsm/ca
-#
+
 
 RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
 
-# We need to call 2 (!) yum commands before being able to enable repositories properly
-# This is a workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1479388
-# Initialize /etc/yum.repos.d/redhat.repo
-# See https://access.redhat.com/solutions/1443553
-RUN yum repolist > /dev/null && \
-    yum install -y yum-utils gettext && \
-    yum-config-manager --disable \* &> /dev/null
-    
 RUN INSTALL_PKGS="gcc-c++ make nodejs" && \
+    rm /etc/rhsm-host && \
+    yum repolist --disablerepo=* && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS
     
