@@ -45,8 +45,9 @@ WORKDIR /data
 RUN rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
+RUN mkdir -p /.npm
 RUN chown -R 1001:0 /data
-RUN chown -R 1001:0 "/.npm"
+RUN chown -R 1001:0 /.npm
 
 USER 1001
 
