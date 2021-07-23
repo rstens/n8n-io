@@ -45,6 +45,8 @@ WORKDIR /data
 RUN rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
+RUN mkdir -p /.npm
+
 RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
 RUN chown -R 1001:0 /data
