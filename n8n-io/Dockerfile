@@ -55,4 +55,6 @@ RUN npm_config_user=1001 npm install -g n8n@${N8N_VERSION}
 
 WORKDIR /data
 
+EXPOSE 5678/tcp
+
 CMD "n8n"
