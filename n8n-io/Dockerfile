@@ -32,9 +32,10 @@ RUN INSTALL_PKGS="gettext gcc-c++ make nodejs" && \
     rm /etc/rhsm-host && \
     yum repolist --disablerepo=* && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS
-    
-RUN yum -y clean all --enablerepo='*' && \
+    rpm -V $INSTALL_PKGS && \
+    yum -y clean all --enablerepo='*' && \
+    npm_config_user=root npm install request -g && \
+    npm_config_user=root npm install -g n8n@${N8N_VERSION} && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
@@ -45,9 +46,8 @@ WORKDIR /data
 RUN rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
-RUN mkdir -p /.n8n
-
-RUN chgrp -R 0 /data && \
+RUN mkdir -p /.n8n && \
+    chgrp -R 0 /data && \
     chmod -R g=u /data && \
 	chgrp -R 0 /home && \
     chmod -R g=u /home && \
@@ -56,9 +56,6 @@ RUN chgrp -R 0 /data && \
 	chgrp -R 0 /.n8n && \
     chmod -R g=u /.n8n && \
     chmod g=u /etc/passwd
-
-RUN npm_config_user=root npm install request -g
-RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
 EXPOSE 5678/tcp
 ENTRYPOINT [ "uid_entrypoint" ]
