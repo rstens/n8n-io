@@ -58,6 +58,7 @@ RUN mkdir -p /.n8n && \
     chmod g=u /etc/passwd
 
 EXPOSE 5678/tcp
+COPY uid_entrypoint /uid_entrypoint
 ENTRYPOINT [ "uid_entrypoint" ]
 
 USER 1001
