@@ -45,18 +45,23 @@ WORKDIR /data
 RUN rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
-RUN mkdir -p /.npm
+RUN mkdir -p /.n8n
+
+RUN chgrp -R 0 /data && \
+    chmod -R g=u /data && \
+	chgrp -R 0 /home && \
+    chmod -R g=u /home && \
+	chgrp -R 0 /usr && \
+    chmod -R g=u /usr && \
+	chgrp -R 0 /.n8n && \
+    chmod -R g=u /.n8n && \
+    chmod g=u /etc/passwd
 
 RUN npm_config_user=root npm install request -g
 RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
-
-RUN chown -R 1001:0 /data
-RUN chown -R 1001:0 /.npm
-RUN chown -R 1001:0 /usr/lib/node_modules
-RUN chown -R 1001:0 /usr/bin/n8n
 
 USER 1001
 
 EXPOSE 5678/tcp
 
-# CMD "n8n"
+CMD "n8n"
