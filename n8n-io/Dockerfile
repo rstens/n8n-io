@@ -60,8 +60,9 @@ RUN chgrp -R 0 /data && \
 RUN npm_config_user=root npm install request -g
 RUN npm_config_user=root npm install -g n8n@${N8N_VERSION}
 
-USER 1001
-
 EXPOSE 5678/tcp
+ENTRYPOINT [ "uid_entrypoint" ]
+
+USER 1001
 
 CMD "n8n"
