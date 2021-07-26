@@ -49,11 +49,11 @@ RUN rm -rf /etc/pki/entitlement && \
 RUN mkdir -p /.n8n && \
     chgrp -R 0 /data && \
     chmod -R g=u /data && \
-	chgrp -R 0 /home && \
+    chgrp -R 0 /home && \
     chmod -R g=u /home && \
-	chgrp -R 0 /usr && \
+    chgrp -R 0 /usr && \
     chmod -R g=u /usr && \
-	chgrp -R 0 /.n8n && \
+    chgrp -R 0 /.n8n && \
     chmod -R g=u /.n8n && \
     chmod g=u /etc/passwd
 
