@@ -63,4 +63,4 @@ ENTRYPOINT [ "/uid_entrypoint" ]
 
 USER 1001
 
-CMD "n8n"
+# CMD "n8n"
