@@ -1,4 +1,4 @@
-FROM node:12
+FROM openshift/nodejs:12
 
 ARG N8N_VERSION
 EXPOSE 5678
