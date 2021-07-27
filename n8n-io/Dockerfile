@@ -1,7 +1,6 @@
 FROM registry.access.redhat.com/ubi8/nodejs-12:latest
 
 ARG N8N_VERSION
-EXPOSE 5678
 
 ENV HOME=/opt/app-root/src \
     TZ=America/Vancouver
@@ -19,5 +18,8 @@ ENV PATH ${HOME}/node_modules/.bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/us
 
 VOLUME ${HOME}
 VOLUME [ "/data" ]
+WORKDIR /data
+
+EXPOSE 5678/tcp
 
 CMD ["n8n"]
