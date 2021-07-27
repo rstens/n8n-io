@@ -39,7 +39,7 @@ RUN INSTALL_PKGS="gettext gcc-c++ make nodejs" && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     localedef -f UTF-8 -i en_US en_US.UTF-8
 
-VOLUME ["/data"]
+# VOLUME ["/data"]
 WORKDIR /data
 
 # Remove entitlements and Subscription Manager configs
