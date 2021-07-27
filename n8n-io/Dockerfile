@@ -1,4 +1,4 @@
-FROM openshift/nodejs:12
+FROM registry.access.redhat.com/ubi8/nodejs-12:latest
 
 ARG N8N_VERSION
 EXPOSE 5678
